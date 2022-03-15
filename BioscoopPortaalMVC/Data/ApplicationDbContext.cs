@@ -22,6 +22,7 @@ namespace BioscoopPortaalMVC.Data
         {
             base.OnModelCreating(builder);
 
+            //Entity Framework: Fluent API
             builder.Entity<Movie>(m => {
                 m.Property(m => m.Name).IsRequired().HasMaxLength(100);
 

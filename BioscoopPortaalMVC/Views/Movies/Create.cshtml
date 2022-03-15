@@ -1,4 +1,4 @@
-﻿@model BioscoopPortaalMVC.Data.Entities.Movie
+﻿@model BioscoopPortaalMVC.Models.MovieUpSertViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DirectorId" class="control-label"></label>
-                <select asp-for="DirectorId" class ="form-control" asp-items="ViewBag.DirectorId"></select>
+                <select asp-for="DirectorId" class ="form-control" asp-items="Model.DirectorsList"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

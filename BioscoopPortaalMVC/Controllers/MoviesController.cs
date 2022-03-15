@@ -57,8 +57,17 @@ namespace BioscoopPortaalMVC.Controllers
         // GET: Movies/Create
         public IActionResult Create()
         {
-            ViewData["DirectorId"] = new SelectList(_context.Directors, "Id", nameof(Director.Name));
-            return View();
+            //Stap 1:
+            //Wat is 'ViewData["DirectorsList"]' voor een datatype?
+            //Hoe kan ik daarvan een property aanmaken in mijn viewmodel?
+            // -> ViewData["DirectorsList"] = new SelectList(_context.Directors, "Id", nameof(Director.Name));
+            //Stap 2:
+            //Hoe geef ik daarna de directors mee zodat de property ook een lijst van directors bevat?
+            // -> SelectList DirectorList = new SelectList(_context.Directors, "Id", nameof(Director.Name));
+            // -> var directors = _context.Directors;
+            var vmMovie = new MovieUpSertViewModel(_context.Directors.ToList());
+
+            return View(vmMovie);
         }
 
         // POST: Movies/Create
@@ -66,16 +75,25 @@ namespace BioscoopPortaalMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ReleaseDate,Duration,DirectorId")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Name,Description,ReleaseDate,Duration,DirectorId")] MovieUpSertViewModel movieViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
+                var movieDataModel = new Movie() { 
+                    Name = movieViewModel.Name,
+                    Description = movieViewModel.Description,
+                    Duration = movieViewModel.Duration,
+                    ReleaseDate = movieViewModel.ReleaseDate,
+                    DirectorId = movieViewModel.DirectorId
+                };
+                _context.Add(movieDataModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DirectorId"] = new SelectList(_context.Directors, "Id", "Id", movie.DirectorId);
-            return View(movie);
+            //ViewData["DirectorId"] = new SelectList(_context.Directors, "Id", "Id", movieViewModel.DirectorId);
+            movieViewModel.Directors = _context.Directors.ToList();
+
+            return View(movieViewModel);
         }
 
         // GET: Movies/Edit/5
